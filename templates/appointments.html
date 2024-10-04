@@ -1,111 +1,98 @@
-<!-- templates/appointments.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{{ selected_gym }} - {{ selected_date }}的预约信息</h1>
+<div class="container">
+    <h1 class="text-center mt-4">{{ selected_gym }} - {{ selected_date }}的预约信息</h1>
 
-<form action="{{ url_for('appointments') }}" method="get">
-    <label for="gym">场馆选择:</label>
-    <select id="gym" name="gym">
-        {% for gym_title in gym_options %}
-        <option value="{{ gym_title }}" {% if gym_title==selected_gym %}selected{% endif %}>{{ gym_title }}</option>
-        {% endfor %}
-    </select>
+    <form action="{{ url_for('appointments') }}" method="get" class="form-inline mt-4">
+        <div class="form-group mb-2">
+            <label for="gym" class="mr-2">场馆选择:</label>
+            <select id="gym" name="gym" class="form-control">
+                {% for gym_title in gym_options %}
+                <option value="{{ gym_title }}" {% if gym_title==selected_gym %}selected{% endif %}>{{ gym_title }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="date" class="mr-2">预约日期:</label>
+            <select id="date" name="date" class="form-control">
+                {% for date in available_dates %}
+                <option value="{{ date }}" {% if date==selected_date %}selected{% endif %}>{{ date }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">查看预约</button>
+    </form>
 
-    <label for="date">预约日期:</label>
-    <select id="date" name="date">
-        {% for date in available_dates %}
-        <option value="{{ date }}" {% if date==selected_date %}selected{% endif %}>{{ date }}</option>
-        {% endfor %}
-    </select>
+    <!-- 预约列表 -->
+    <h2 class="mt-4">预约列表</h2>
+    <div class="table-responsive">
+        <table id="appointments-table" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>预约日期</th>
+                    <th>场地号</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>姓名</th>
+                    <th>联系电话</th>
+                    <th>学工号</th>
+                    <th>创建时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment.order_date }}</td>
+                    <td>{{ appointment.place_title }}</td>
+                    <td>{{ appointment.start_time }}</td>
+                    <td>{{ appointment.end_time }}</td>
+                    <td>{{ appointment.order_name }}</td>
+                    <td>{{ appointment.order_phone }}</td>
+                    <td>{{ appointment.uid }}</td>
+                    <td>{{ appointment.create_time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-    <input type="submit" value="查看预约">
-</form>
+    <!-- 状态表格 -->
+    <h2 class="mt-4">预约状态</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tr>
+                <th>时间段/场地</th>
+                {% for place_title in place_list %}
+                <th>{{ place_title }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in status_table %}
+            <tr>
+                <td>{{ row.time_slot }}</td>
+                {% for place in row.places %}
+                <td class="status-cell" data-status="{{ place.status }}">{{ place.status }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 
-<!-- 预约列表 -->
-<h2>预约列表</h2>
-<table id="appointments-table" class="display">
-    <thead>
-        <tr>
-            <th>预约日期</th>
-            <th>场地号</th>
-            <th>开始时间</th>
-            <th>结束时间</th>
-            <th>姓名</th>
-            <th>联系电话</th>
-            <th>学工号</th>
-            <th>创建时间</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for appointment in appointments %}
-        <tr>
-            <td>{{ appointment.order_date }}</td>
-            <td>{{ appointment.place_title }}</td>
-            <td>{{ appointment.start_time }}</td>
-            <td>{{ appointment.end_time }}</td>
-            <td>{{ appointment.order_name }}</td>
-            <td>{{ appointment.order_phone }}</td>
-            <td>{{ appointment.uid }}</td>
-            <td>{{ appointment.create_time }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <br>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary btn-block">返回首页</a>
+</div>
 
-<!-- 状态表格 -->
-<h2>预约状态</h2>
-<table border="1">
-    <tr>
-        <th>时间段/场地</th>
-        {% for place_title in place_list %}
-        <th>{{ place_title }}</th>
-        {% endfor %}
-    </tr>
-    {% for row in status_table %}
-    <tr>
-        <td>{{ row.time_slot }}</td>
-        {% for place in row.places %}
-        <td class="status-cell" data-status="{{ place.status }}">{{ place.status }}</td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-</table>
-
-<br>
-<a href="{{ url_for('index') }}">返回首页</a>
-
-<!-- DataTables初始化 -->
+<!-- DataTables 初始化 -->
 <script>
     $(document).ready(function () {
         $('#appointments-table').DataTable({
-            "order": [[1, "asc"], [2, "asc"]],  // 默认按场地号和开始时间排序
+            // 设置默认排序，首先按照“场地号”升序，然后按照“开始时间”升序
+            "order": [[1, "asc"], [2, "asc"]],
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese.json"
             }
         });
     });
 </script>
-
-
-<!-- <script>
-    // 点击状态表格的单元格，筛选预约列表
-    $('.status-cell').click(function () {
-        var status = $(this).data('status');
-        var place_title = $(this).closest('table').find('th').eq($(this).index()).text();
-        var time_slot = $(this).closest('tr').find('td:first').text();
-
-        // 筛选预约列表
-        var table = $('#appointments-table').DataTable();
-        table.search('').columns().search('').draw();  // 清除现有筛选
-
-        // 筛选条件：场地号和时间段
-        table.column(1).search(place_title);
-        table.column(2).search(time_slot.split('-')[0]);
-        table.column(3).search(time_slot.split('-')[1]);
-
-        table.draw();
-    });
-</script> -->
-
 {% endblock %}

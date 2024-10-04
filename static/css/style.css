@@ -1,35 +1,8 @@
-/* static/css/style.css */
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-}
-
-label {
-    display: inline-block;
-    width: 150px;
-}
-
-input[type="text"],
-select {
-    width: 200px;
-}
-
-input[type="submit"] {
-    margin-top: 10px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
     margin-top: 20px;
 }
 
-table th,
-table td {
-    padding: 8px;
-    text-align: center;
-}
-
+/* 状态单元格样式 */
 .status-cell[data-status="已预约"] {
     background-color: #808080;
     color: white;
@@ -43,6 +16,7 @@ table td {
     background-color: #CCFFFF;
 }
 
+/* 闪烁消息样式 */
 .flash-message {
     padding: 10px;
     margin-bottom: 10px;
