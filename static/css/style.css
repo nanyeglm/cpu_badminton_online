@@ -1,0 +1,59 @@
+/* static/css/style.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+label {
+    display: inline-block;
+    width: 150px;
+}
+
+input[type="text"],
+select {
+    width: 200px;
+}
+
+input[type="submit"] {
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th,
+table td {
+    padding: 8px;
+    text-align: center;
+}
+
+.status-cell[data-status="已预约"] {
+    background-color: #808080;
+    color: white;
+}
+
+.status-cell[data-status="已保留"] {
+    background-color: #FFCC99;
+}
+
+.status-cell[data-status="可以预约"] {
+    background-color: #CCFFFF;
+}
+
+.flash-message {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.flash-message.error {
+    background-color: #f2dede;
+    color: #a94442;
+}
+
+.flash-message.success {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
