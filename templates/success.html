@@ -1,0 +1,21 @@
+<!-- templates/success.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mt-4">预约已提交</h1>
+    <div class="alert alert-info mt-4">
+        <p>您的预约信息如下：</p>
+        <ul>
+            <li>学工号：{{ appointment_info.uid }}</li>
+            <li>场地号：{{ appointment_info.place_title_input }}</li>
+            <li>开始时间：{{ appointment_info.start_time }}</li>
+            <li>预约日期：{{ appointment_info.order_date }}</li>
+            <li>姓名：{{ appointment_info.order_name }}</li>
+            <li>联系电话：{{ appointment_info.order_phone }}</li>
+            <li>提交时间：{{ appointment_info.submission_datetime }}</li>
+        </ul>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-primary btn-block">返回首页</a>
+</div>
+{% endblock %}

@@ -1,38 +1,41 @@
+<!-- templates/index.html -->
 {% extends 'base.html' %}
 
 {% block content %}
 <div class="container">
     <h1 class="text-center mt-4">中国药科大学羽毛球场馆预约系统</h1>
     <form action="/" method="post" class="mt-4">
-        <!-- 使用 Bootstrap 表单组 -->
+        <!-- 学工号 -->
         <div class="form-group">
-            <label for="uid">学工号(必填):</label>
-            <input type="text" id="uid" name="uid" class="form-control" required>
+            <label for="uid">学工号(可留空随机生成):</label>
+            <input type="text" id="uid" name="uid" class="form-control">
         </div>
+        <!-- 场地号 -->
         <div class="form-group">
             <label for="place_title">场地号(例如:4):</label>
             <input type="text" id="place_title" name="place_title" class="form-control" required>
         </div>
+        <!-- 开始时间 -->
         <div class="form-group">
             <label for="start_time">开始时间(例如:19:00):</label>
             <input type="text" id="start_time" name="start_time" class="form-control" required>
         </div>
+        <!-- 预约日期 -->
         <div class="form-group">
             <label for="order_date">预约日期:</label>
-            <select id="order_date" name="order_date" class="form-control" required>
-                {% for date in available_dates %}
-                <option value="{{ date }}">{{ date }}</option>
-                {% endfor %}
-            </select>
+            <input type="date" id="order_date" name="order_date" class="form-control" required>
         </div>
+        <!-- 姓名 -->
         <div class="form-group">
-            <label for="order_name">姓名(可选):</label>
+            <label for="order_name">姓名(可留空随机生成):</label>
             <input type="text" id="order_name" name="order_name" class="form-control">
         </div>
+        <!-- 联系电话 -->
         <div class="form-group">
-            <label for="order_phone">联系电话(可选):</label>
+            <label for="order_phone">联系电话(可留空随机生成):</label>
             <input type="text" id="order_phone" name="order_phone" class="form-control">
         </div>
+        <!-- 场馆选择 -->
         <div class="form-group">
             <label for="gym_selection">场馆选择:</label>
             <select id="gym_selection" name="gym_selection" class="form-control">
@@ -41,9 +44,54 @@
                 {% endfor %}
             </select>
         </div>
+        <!-- 提交方式 -->
+        <div class="form-group">
+            <label for="submission_type">提交方式:</label>
+            <select id="submission_type" name="submission_type" class="form-control" required>
+                <option value="">请选择</option>
+                <option value="immediate">立即提交</option>
+                <option value="scheduled">延迟提交</option>
+            </select>
+        </div>
+        <!-- 提交时间（仅在延迟提交时显示） -->
+        <div id="scheduled_options" style="display: none;">
+            <div class="form-group">
+                <label for="submission_date">提交日期:</label>
+                <input type="date" id="submission_date" name="submission_date" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="submission_time">提交时间(格式: HH:MM:SS):</label>
+                <input type="time" id="submission_time" name="submission_time" class="form-control" step="1">
+            </div>
+        </div>
+        <!-- 提交按钮 -->
         <button type="submit" class="btn btn-primary btn-block">提交预约</button>
     </form>
     <br>
     <a href="{{ url_for('appointments') }}" class="btn btn-secondary btn-block">查看已预约</a>
+    <br>
+    <a href="{{ url_for('view_tasks') }}" class="btn btn-success btn-block">查看已提交的所有任务</a>
+
 </div>
+
+<script>
+    // 根据提交方式显示或隐藏延迟提交选项
+    document.getElementById('submission_type').addEventListener('change', function () {
+        var scheduledOptions = document.getElementById('scheduled_options');
+        if (this.value === 'scheduled') {
+            scheduledOptions.style.display = 'block';
+            // 设置提交日期的默认值为当前日期
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementById('submission_date').value = today;
+            // 设置提交时间的默认值为当前时间，精确到秒
+            var now = new Date();
+            var hours = ('0' + now.getHours()).slice(-2);
+            var minutes = ('0' + now.getMinutes()).slice(-2);
+            var seconds = ('0' + now.getSeconds()).slice(-2);
+            document.getElementById('submission_time').value = hours + ':' + minutes + ':' + seconds;
+        } else {
+            scheduledOptions.style.display = 'none';
+        }
+    });
+</script>
 {% endblock %}

@@ -1,3 +1,4 @@
+<!-- templates/appointments.html -->
 {% extends 'base.html' %}
 
 {% block content %}
@@ -16,11 +17,7 @@
         </div>
         <div class="form-group mx-sm-3 mb-2">
             <label for="date" class="mr-2">预约日期:</label>
-            <select id="date" name="date" class="form-control">
-                {% for date in available_dates %}
-                <option value="{{ date }}" {% if date==selected_date %}selected{% endif %}>{{ date }}</option>
-                {% endfor %}
-            </select>
+            <input type="date" id="date" name="date" class="form-control" value="{{ selected_date }}">
         </div>
         <button type="submit" class="btn btn-primary mb-2">查看预约</button>
     </form>
@@ -50,7 +47,12 @@
                     <td>{{ appointment.end_time }}</td>
                     <td>{{ appointment.order_name }}</td>
                     <td>{{ appointment.order_phone }}</td>
-                    <td>{{ appointment.uid }}</td>
+                    <td>
+                        <a href="https://cgyy.xiaorankeji.com/h5/index.html#/pages/store/index?uid={{ appointment.uid }}"
+                            target="_blank">
+                            {{ appointment.uid }}
+                        </a>
+                    </td>
                     <td>{{ appointment.create_time }}</td>
                 </tr>
                 {% endfor %}
@@ -87,8 +89,6 @@
 <script>
     $(document).ready(function () {
         $('#appointments-table').DataTable({
-            // 设置默认排序，首先按照“场地号”升序，然后按照“开始时间”升序
-            "order": [[1, "asc"], [2, "asc"]],
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese.json"
             }
