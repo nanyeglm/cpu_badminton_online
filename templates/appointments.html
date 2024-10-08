@@ -40,7 +40,8 @@
             </thead>
             <tbody>
                 {% for appointment in appointments %}
-                <tr>
+                <tr {% if (appointment.uid[:6] in ['202019', '202018' , '202020' , '202016' , '202017' ]) or
+                    (appointment.uid[:5] in ['33210', '33200' ]) %} style="color: red;" {% endif %}>
                     <td>{{ appointment.order_date }}</td>
                     <td>{{ appointment.place_title }}</td>
                     <td>{{ appointment.start_time }}</td>
